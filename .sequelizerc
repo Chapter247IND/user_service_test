@@ -1,0 +1,12 @@
+require("@babel/polyfill");
+
+const path = require("path");
+console.log(process.env);
+
+const defaultPath = "src";
+module.exports = {
+  config: path.resolve(defaultPath, "config", "config.json"),
+  "models-path": path.resolve(defaultPath, "models"),
+  "seeders-path": path.resolve(defaultPath, "seeders"),
+  "migrations-path": path.resolve(defaultPath, "migrations"),
+};
