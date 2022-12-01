@@ -49,8 +49,7 @@ const addUserAccount = async (req, res) => {
     }
 
     const body = pick(req.body, ["fullName", "email", "birthDate"]);
-
-    const newUser = new User({
+      const newUser = new User({
       ...body,
       username: uuid(),
       status: "active",
@@ -58,7 +57,7 @@ const addUserAccount = async (req, res) => {
 
     await newUser.save();
 
-    return res.status(201).json();
+    return res.status(201).json({'message':'User has been added successfully'});
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error });
@@ -143,7 +142,7 @@ const updateUserAccount = async (req, res) => {
       }
     );
 
-    return res.status(200).json();
+    return res.status(200).json({'message':'User has been updated successfully'});
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error });
@@ -164,13 +163,17 @@ const removeUserAccount = async (req, res) => {
     if (!validate.valid) {
       return res.status(400).json(validate.errors);
     }
+    const userCheck = await User.findOne({where:{id}});
+    if (!userCheck) {
+      return res.status(400).json({error:"User doesn't found."});
+    }
     await User.destroy({
       where: {
         id,
       },
     });
 
-    return res.status(200).json();
+    return res.status(200).json({'message':'User has been deleted successfully'});
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error });
@@ -191,6 +194,11 @@ const suspendUserAccount = async (req, res) => {
     if (!validate.valid) {
       return res.status(400).json(validate.errors);
     }
+    const userCheck = await User.findOne({where:{id}});
+    if (!userCheck) {
+      return res.status(400).json({error:"User doesn't found."});
+    }
+
     await User.update(
       { status: "suspended" },
       {
@@ -200,7 +208,7 @@ const suspendUserAccount = async (req, res) => {
       }
     );
 
-    return res.status(200).json();
+    return res.status(200).json({'message':'User account has been suspended successfully'});
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error });
@@ -231,7 +239,7 @@ const reactivateUserAccount = async (req, res) => {
       }
     );
 
-    return res.status(200).json();
+    return res.status(200).json({'message':'User account has been suspended successfully'});
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error });
